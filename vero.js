@@ -1,5 +1,5 @@
 /**
- *  vero - v0.0.1
+ *  vero - v0.0.2
  *
  *  Aydin "/dev/mach" Ulfer.
  *  8th July 2015
@@ -10,24 +10,27 @@
 
 var superagent = require('superagent');
 
-var vero = function(authToken) {
+var vero = function(authToken, devMode) {
+  authToken = authToken || false;
+  devMode = devMode || false;
+
   var ret = {
     users: {},
     events: {}
   };
   var apiUrl = 'https://api.getvero.com/api/v2';
-  var authToken = authToken || false;
 
   var req = function(type, endPoint, payload, cb) {
     var url = apiUrl + endPoint;
 
     if (!authToken) {
       return cb('Auth token must be defined to use make a request to ' + url);
-    };
+    }
 
     payload.auth_token = authToken;
+    payload.development_mode = devMode;
 
-    return  superagent[type](url).
+    return superagent[type](url).
       send(payload).
       set('Accept', 'application/json').
       end(cb);
@@ -36,7 +39,7 @@ var vero = function(authToken) {
   ret.heartbeat = function(cb) {
     if (!cb) {
       throw "Please provide callback function to use `heartbeat` method";
-    };
+    }
 
     superagent.
       get(apiUrl + '/heartbeat').
@@ -111,11 +114,11 @@ var vero = function(authToken) {
 
     if (add && typeof add === 'string') {
       add = [add];
-    };
+    }
 
     if (remove && typeof remove === 'string') {
       remove = [remove];
-    };
+    }
 
     return req(
       'put',

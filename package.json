@@ -1,6 +1,6 @@
 {
   "name": "vero",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is a thin wrapper for Vero's public api",
   "main": "vero.js",
   "dependencies": {
